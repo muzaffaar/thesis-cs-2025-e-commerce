@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth\Default;
 
+use App\Http\Controllers\Api\Auth\Default\utils\CheckingEmailVerification;
 use App\Http\Controllers\Api\Auth\Default\utils\UserRoleIdentifier;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
@@ -21,6 +22,8 @@ class LoginController extends Controller
         }
 
         $user = Auth::user();
+
+//        CheckingEmailVerification::verify($user);
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
