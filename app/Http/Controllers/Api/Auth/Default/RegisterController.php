@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth\Default;
 
+use App\Http\Controllers\Api\Auth\Default\utils\UserRoleIdentifier;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class RegisterController extends Controller
         return response()->json([
             'message' => 'User registered successfully', // TODO: message will be replaced to LOCALE
             'user' => $user,
-            'redirectUrl' => config('urls.home'),
+            'redirectUrl' => UserRoleIdentifier::identifyRedirectUrlByRole($user),
             'token' => $token,
         ], 201);
     }

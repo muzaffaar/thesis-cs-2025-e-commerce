@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth\Default;
 
+use App\Http\Controllers\Api\Auth\Default\utils\UserRoleIdentifier;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
@@ -15,33 +16,20 @@ class LoginController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Invalid credentials'
+                'message' => 'Invalid credentials' // TODO: message will be replaced to LOCALE
             ], 401);
         }
 
         $user = Auth::user();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // TODO: This return body must be replaced into another dedicated method that received params and makes decorated return body
         return response()->json([
             'message' => 'Login successful', // TODO: message will be replaced to LOCALE
             'user' => $user,
-            'redirectUrl' => $this->identifyRedirectUrlByRole($user),
+            'redirectUrl' => UserRoleIdentifier::identifyRedirectUrlByRole($user),
             'token' => $token,
         ]);
-    }
-
-    /**
-     * @param $user
-     * @return String url according to user role
-     */
-    private function identifyRedirectUrlByRole($user) {
-
-        $roleNames = $user->roles->pluck('name')->toArray();
-
-        $isAdmin = collect($roleNames)->contains(function ($role) {
-            return $role === 'admin' || preg_match('/^admin_[a-z]+$/', $role);
-        });
-
-        return $isAdmin ? config('urls.home_admin') : config('urls.home');
     }
 }
