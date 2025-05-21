@@ -18,7 +18,10 @@ return [
     |
     */
 
-    'driver' => env('SESSION_DRIVER', 'database'),
+    // PRE-DEFINED 'driver' => env('SESSION_DRIVER', 'database'),
+
+    // POST-DEFINED
+    'driver' => 'array',
 
     /*
     |--------------------------------------------------------------------------
