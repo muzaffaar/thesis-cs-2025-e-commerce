@@ -57,4 +57,74 @@ class CatalogController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function update(CatalogStoreRequest $request, Catalog $catalog) {
+        /*
+         * TODO: update catalog
+         * update translations
+         * update images
+         */
+    }
+
+    public function destroy(string $locale, string $slug) {
+        try {
+            $catalog = Catalog::where('slug', $slug)->firstOrFail();
+
+            \DB::transaction(function () use ($catalog) {
+
+                foreach ($catalog->images as $image) {
+                    $relativePath = str_replace('/storage/', '', parse_url($image->url, PHP_URL_PATH));
+                    Storage::disk('public')->delete($relativePath);
+
+                    $image->delete();
+                }
+
+                $catalog->translations()->delete();
+
+                $catalog->children()->update(['parent_id' => null]);
+
+                $catalog->delete();
+            });
+
+            return response()->json([
+                'message' => __('success_response.catalog_deleted'),
+            ]);
+        } catch (\Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show(string $locale, string $slug) {
+        try {
+            $catalog = Catalog::where('slug', $slug)->firstOrFail();
+
+            $catalog->load('translation', 'images', 'children.translation', 'parent.translation');
+
+            return response()->json([
+                'catalog' => $catalog,
+            ]);
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return response()->json(['message' => $exception->getMessage()], 500);
+        }
+    }
+
+    public function index() {
+        try {
+            $catalogs = Catalog::with([
+                'translation',
+                'images',
+                'children.translation',
+            ])->get();
+
+
+            return response()->json([
+                'catalogs' => $catalogs,
+            ]);
+        } catch (\Exception $e){
+            Log::error($e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
 }

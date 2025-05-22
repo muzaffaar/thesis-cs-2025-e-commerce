@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Catalog extends Model
@@ -22,9 +23,10 @@ class Catalog extends Model
         return $this->hasMany(CatalogTranslation::class);
     }
 
-    public function translation($locale = null) : CatalogTranslation {
+    public function translation($locale = null) : HasOne
+    {
         $locale = $locale ?? app()->getLocale();
-        return $this->translations()->where('locale', $locale)->first();
+        return $this->hasOne(CatalogTranslation::class)->where('locale', $locale);
     }
 
     public function parent() : belongsTo

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
-Route::group(['prefix' => '{locale}', 'where' => ['locale' => 'en|hu|ru|uz'], 'middleware' => ['setlocale']], function () {
+Route::group(['prefix' => '{locale}', 'where' => ['locale' => implode('|', config('locales.supported_locales'))], 'middleware' => ['setlocale']], function () {
 
 
     Route::prefix('v1')->group(function () {
@@ -40,7 +40,14 @@ Route::group(['prefix' => '{locale}', 'where' => ['locale' => 'en|hu|ru|uz'], 'm
             /**
              * Admin and admin related routes
              */
-            Route::post('/catalogs', [CatalogController::class, 'store']);
+            Route::prefix('admin')->group(function () {
+                Route::post('/catalogs', [CatalogController::class, 'store']);
+                //....
+                Route::put('/catalogs/{catalog}', [CatalogController::class, 'update']);
+                Route::delete('/catalogs/{catalog}', [CatalogController::class, 'destroy']);
+                Route::get('/catalogs/{catalog}', [CatalogController::class, 'show']);
+                Route::get('/catalogs', [CatalogController::class, 'index']);
+            });
         });
     });
 
