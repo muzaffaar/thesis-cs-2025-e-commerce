@@ -21,7 +21,7 @@ class RegisterController extends Controller
         $token = $user->createToken('auth_token_e_commerce')->plainTextToken;
 
         return response()->json([
-            'message' => 'User registered successfully', // TODO: message will be replaced to LOCALE
+            'message' => __('auth.registered'),
             'user' => $user,
             'redirectUrl' => UserRoleIdentifier::identifyRedirectUrlByRole($user),
             'token' => $token,

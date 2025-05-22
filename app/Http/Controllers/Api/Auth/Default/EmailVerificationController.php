@@ -12,21 +12,21 @@ class EmailVerificationController extends Controller
     public function verify(EmailVerificationRequest $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Already verified']);
+            return response()->json(['message' => __('auth.email_already_verified')]);
         }
 
-        $request->fulfill(); // This marks the user verified
-        return response()->json(['message' => 'Verified successfully']);
+        $request->fulfill();
+        return response()->json(['message' => __('auth.email_verified_success')]);
     }
 
     public function resend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return response()->json(['message' => 'Email already verified']);
+            return response()->json(['message' => __('auth.email_already_verified')]);
         }
 
         $request->user()->sendEmailVerificationNotification();
 
-        return response()->json(['message' => 'Verification email resent']);
+        return response()->json(['message' => __('passwords.sent')]);
     }
 }

@@ -17,7 +17,7 @@ class LoginController extends Controller
 
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                'message' => 'Invalid credentials' // TODO: message will be replaced to LOCALE
+                'message' => __('auth.failed')
             ], 401);
         }
 

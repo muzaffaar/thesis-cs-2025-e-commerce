@@ -32,7 +32,7 @@ class PasswordResetController extends Controller
         );
 
         return $status == Password::PASSWORD_RESET
-            ? response()->json(['message' => 'Password reset successful.']) // TODO: This will be replaced with LOCALE
+            ? response()->json(['message' => __('password.reset')])
             : response()->json(['message' => __($status)], 400);
     }
 }

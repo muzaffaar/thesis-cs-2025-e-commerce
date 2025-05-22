@@ -37,7 +37,7 @@ class GoogleLoginController extends Controller implements Loginable
         Auth::login($user);
 
         return response()->json([
-            'message' => 'Login successful', // TODO: message will be replaced to LOCALE
+            'message' => __('auth.login_success'),
             'user' => $user,
             'redirectUrl' => UserRoleIdentifier::identifyRedirectUrlByRole($user),
             'token' => $googleUser->token,
