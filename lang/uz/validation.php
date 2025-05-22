@@ -101,6 +101,19 @@ return [
     'url' => ':attribute URL noto‘g‘ri formatda.',
     'uuid' => ':attribute yaroqli UUID bo‘lishi kerak.',
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'nom',
+        'description' => 'ta’rif',
+        'slug' => 'slug',
+        'is_active' => 'faol holat',
+        'images' => 'rasmlar',
+        'images.*' => 'rasm fayli',
+        'translations' => 'tarjimalar',
+        'translations.*.locale' => 'til',
+        'translations.*.name' => 'tarjima nomi',
+        'translations.*.slug' => 'tarjima slug',
+    ],
 
+    'locale_required' => 'Majburiy til mavjud emas: :locale',
+    'invalid_locale' => 'Noto‘g‘ri til ko‘rsatilgan: :locale',
 ];

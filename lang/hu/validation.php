@@ -101,6 +101,20 @@ return [
     'url' => 'A(z) :attribute érvényes URL-nek kell lennie.',
     'uuid' => 'A(z) :attribute érvényes UUID-nek kell lennie.',
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'név',
+        'description' => 'leírás',
+        'slug' => 'slug',
+        'is_active' => 'aktív státusz',
+        'images' => 'képek',
+        'images.*' => 'kép fájl',
+        'translations' => 'fordítások',
+        'translations.*.locale' => 'nyelv',
+        'translations.*.name' => 'fordítás neve',
+        'translations.*.slug' => 'fordítás slug',
+    ],
+
+    'locale_required' => 'Required locale is missing: :locale',
+    'invalid_locale' => 'Invalid locale provided: :locale',
 
 ];

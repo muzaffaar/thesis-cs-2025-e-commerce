@@ -194,4 +194,11 @@ return [
 
     'attributes' => [],
 
+    /*
+     * ------------------------------------------------------------------------
+     * Post defined validations
+     * ------------------------------------------------------------------------
+     */
+    'locale_required' => 'Required locale is missing: :locale',
+    'invalid_locale' => 'Invalid locale provided: :locale',
 ];

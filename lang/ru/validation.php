@@ -101,6 +101,19 @@ return [
     'url' => 'Поле :attribute имеет недопустимый формат URL.',
     'uuid' => 'Поле :attribute должно быть допустимым UUID.',
 
-    'attributes' => [],
+    'attributes' => [
+        'name' => 'название',
+        'description' => 'описание',
+        'slug' => 'человекопонятный URL',
+        'is_active' => 'статус активности',
+        'images' => 'изображения',
+        'images.*' => 'файл изображения',
+        'translations' => 'переводы',
+        'translations.*.locale' => 'локаль',
+        'translations.*.name' => 'название перевода',
+        'translations.*.slug' => 'slug перевода',
+    ],
 
+    'locale_required' => 'Отсутствует обязательная локаль: :locale',
+    'invalid_locale' => 'Указана недопустимая локаль: :locale',
 ];

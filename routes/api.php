@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\Default\LogoutController;
 use App\Http\Controllers\Api\Auth\Default\PasswordResetController;
 use App\Http\Controllers\Api\Auth\Default\RegisterController;
 use App\Http\Controllers\Api\Auth\GoogleLoginController;
+use App\Http\Controllers\Api\Catalog\CatalogController;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,11 @@ Route::group(['prefix' => '{locale}', 'where' => ['locale' => 'en|hu|ru|uz'], 'm
             });
 
             Route::post('/auth/logout', [LogoutController::class, 'logout']);
+
+            /**
+             * Admin and admin related routes
+             */
+            Route::post('/catalogs', [CatalogController::class, 'store']);
         });
     });
 
