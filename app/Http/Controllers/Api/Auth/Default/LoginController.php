@@ -23,13 +23,10 @@ class LoginController extends Controller
 
         $user = Auth::user();
 
-//        CheckingEmailVerification::verify($user);
-
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // TODO: This return body must be replaced into another dedicated method that received params and makes decorated return body
         return response()->json([
-            'message' => 'Login successful', // TODO: message will be replaced to LOCALE
+            'message' => __('auth.login_success'),
             'user' => $user,
             'redirectUrl' => UserRoleIdentifier::identifyRedirectUrlByRole($user),
             'token' => $token,
