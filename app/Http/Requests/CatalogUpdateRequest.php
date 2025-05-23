@@ -4,28 +4,28 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
+use App\Models\Catalog;
 
-class CatalogStoreRequest extends FormRequest
+class CatalogUpdateRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $catalog = $this->getCatalogFromSlug();
+
         return [
             'name' => 'required|string',
             'description' => 'required|string',
-            'slug' => 'required|string|unique:catalogs,slug',
+            'slug' => [
+                'required',
+                'string',
+                Rule::unique('catalogs', 'slug')->ignore($catalog?->id),
+            ],
             'is_active' => 'boolean',
             'parent_id' => 'integer|nullable|exists:catalogs,id',
 
@@ -41,11 +41,12 @@ class CatalogStoreRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $locales = config('locales.supported_locales'); // dynamic!
+        $locales = config('locales.supported_locales');
+        $translations = $this->input('translations', []);
+        $catalog = $this->getCatalogFromSlug();
+        $catalogId = $catalog?->id;
 
-        $validator->after(function ($validator) use ($locales) {
-            $translations = $this->input('translations', []);
-
+        $validator->after(function ($validator) use ($locales, $translations, $catalogId) {
             $submittedLocales = collect($translations)->pluck('locale')->all();
             $missingLocales = array_diff($locales, $submittedLocales);
 
@@ -66,9 +67,12 @@ class CatalogStoreRequest extends FormRequest
                     continue;
                 }
 
-                $exists = \DB::table('catalog_translations')
+                $exists = DB::table('catalog_translations')
                     ->where('locale', $locale)
                     ->where('slug', $slug)
+                    ->when($catalogId, function ($query) use ($catalogId) {
+                        return $query->where('catalog_id', '!=', $catalogId);
+                    })
                     ->exists();
 
                 if ($exists) {
@@ -76,5 +80,14 @@ class CatalogStoreRequest extends FormRequest
                 }
             }
         });
+    }
+
+    /**
+     * Get the catalog model from the route slug.
+     */
+    protected function getCatalogFromSlug(): ?Catalog
+    {
+        $slug = $this->route('catalog');
+        return Catalog::where('slug', $slug)->first();
     }
 }

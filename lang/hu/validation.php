@@ -114,7 +114,7 @@ return [
         'translations.*.slug' => 'fordítás slug',
     ],
 
-    'locale_required' => 'Required locale is missing: :locale',
-    'invalid_locale' => 'Invalid locale provided: :locale',
+    'locale_required' => 'Hiányzik a kötelező nyelvi változat: :locale',
+    'invalid_locale' => 'Érvénytelen nyelvi kód: :locale',
 
 ];
