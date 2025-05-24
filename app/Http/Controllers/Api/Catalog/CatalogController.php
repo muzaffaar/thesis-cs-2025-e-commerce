@@ -6,20 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CatalogStoreRequest;
 use App\Http\Requests\CatalogUpdateRequest;
 use App\Models\Catalog;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Image;
 
 class CatalogController extends Controller
 {
-    /** This method creates new category
-     * @param CatalogStoreRequest $request validates incoming data from user
-     * @return \Illuminate\Http\JsonResponse including category data and relations e.g, parent, children, images, ...
+    /**
+     * @throws AuthorizationException
      */
-    public function store(CatalogStoreRequest $request) {
-        // TODO: POLICY must be implemented in order to avoid unauthorized access
+    public function store(CatalogStoreRequest $request): JsonResponse
+    {
+        $this->authorize('create', Catalog::class);
         try {
             \DB::transaction(function () use ($request) {
                 $catalog = Catalog::create([
@@ -65,10 +66,12 @@ class CatalogController extends Controller
         }
     }
 
-    public function update(CatalogUpdateRequest $request, string $locale, string $catalog) {
-        // TODO: POLICY must be implemented in order to avoid unauthorized access
+    public function update(CatalogUpdateRequest $request, string $locale, string $catalog): JsonResponse
+    {
         try {
             $catalog = Catalog::where('slug', $catalog)->firstOrFail();
+
+            $this->authorize('update', $catalog);
 
             \DB::transaction(function () use ($request, $catalog) {
                 $catalog->update([
@@ -124,10 +127,12 @@ class CatalogController extends Controller
         }
     }
 
-    public function destroy(string $locale, string $slug) {
-        // TODO: POLICY must be implemented in order to avoid unauthorized access
+    public function destroy(string $locale, string $slug): JsonResponse
+    {
         try {
             $catalog = Catalog::where('slug', $slug)->firstOrFail();
+
+            $this->authorize('delete', $catalog);
 
             \DB::transaction(function () use ($catalog) {
 
@@ -152,10 +157,15 @@ class CatalogController extends Controller
         }
     }
 
-    public function show(string $locale, string $slug) {
-        // TODO: POLICY must be implemented in order to avoid unauthorized access
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(string $locale, string $slug): JsonResponse
+    {
         try {
             $catalog = Catalog::where('slug', $slug)->firstOrFail();
+
+            $this->authorize('view', $catalog);
 
             $catalog->load('translation', 'images', 'children.translation', 'parent.translation');
 
@@ -168,8 +178,12 @@ class CatalogController extends Controller
         }
     }
 
-    public function index() {
-        // TODO: POLICY must be implemented in order to avoid unauthorized access
+    /**
+     * @throws AuthorizationException
+     */
+    public function index(): JsonResponse
+    {
+        $this->authorize('viewAny', Catalog::class);
         try {
             $catalogs = Catalog::with([
                 'translation',
