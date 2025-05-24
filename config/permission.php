@@ -1,12 +1,13 @@
 <?php
 
 return [
+    'admin_roles_prefix' => env('ADMIN_ROLES_PREFIX', 'admin'),
+    'guard_name' => env('GUARD_NAME', 'sanctum'),
     /*
      * -----------------------------------------------------------------------------
-     * POST DEFINED
+     * POST DEFINED ^|
      * -----------------------------------------------------------------------------
      */
-    'guard_name' => env('GUARD_NAME', 'sanctum'),
 
     'models' => [
 

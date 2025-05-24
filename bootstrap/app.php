@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'verified.api' => \App\Http\Middleware\EnsureEmailIsVerifiedApi::class,
             'setlocale'    => \App\Http\Middleware\SetLocale::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+            'admin.roles' => \App\Http\Middleware\AdminAndRelatedRoleMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -22,7 +22,7 @@ class EnsureEmailIsVerifiedApi
         ) {
             return response()->json([
                 'message' => 'Your email address is not verified.',
-                'resend_url' => route('verification.resend'),
+                'resend_url' => route('verification.resend', ['locale' => app()->getLocale()]),
             ], 403);
         }
 

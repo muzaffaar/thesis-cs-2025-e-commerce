@@ -8,11 +8,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Notifications\VerifyEmailWithLocale;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
+
+    protected $guard_name = 'sanctum';
 
     /**
      * The attributes that are mass assignable.
@@ -50,4 +53,9 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
+    public function sendEmailVerificationNotification(): void
+    {
+        $locale = app()->getLocale(); // or customize as needed
+        $this->notify(new VerifyEmailWithLocale($locale));
+    }
 }
